@@ -66,6 +66,9 @@ export default function Main() {
   }
 
   function handleSubmit() {
+    if (requirementsContent === "") {
+      return;
+    }
     setIsSubmitted(true);
   }
 
@@ -100,6 +103,7 @@ export default function Main() {
                 value={requirementsContent}
                 rows={20}
                 borderRadius="sm"
+                required
               ></Textarea>
 
               <Button
@@ -107,6 +111,7 @@ export default function Main() {
                 width={"full"}
                 colorScheme="facebook"
                 borderRadius={"sm"}
+                type="submit"
               >
                 Submit
               </Button>

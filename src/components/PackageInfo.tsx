@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useQuery, useQueryClient } from "react-query";
 import {
   Box,
   Text,
@@ -8,6 +9,7 @@ import {
   HStack,
   Spacer,
   Flex,
+  Spinner,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
@@ -26,17 +28,19 @@ interface Info {
 }
 
 export default function PackageInfo(props: PackageInfoProps) {
-  const [data, setData] = useState<Response>();
+  const { data, isLoading, isError, error } = useQuery(
+    props.name,
+    getPackageData,
+    { retry: false, refetchOnWindowFocus: false }
+  );
+
   async function getPackageData() {
     const url = `https://pypi.org/pypi/${props.name}/json`;
-    const data = await axios
-      .get<Response>(url)
-      .then(res => setData(res.data))
-      .catch(err => console.error(err));
+    const data = await axios.get<Response>(url).then(res => res.data);
+
+    return data;
   }
-  useEffect(() => {
-    getPackageData();
-  }, []);
+
   return (
     <>
       <Box
@@ -47,10 +51,17 @@ export default function PackageInfo(props: PackageInfoProps) {
         marginBottom={2}
       >
         <Link
-          _hover={{ textDecoration: "none", fontWeight: "500" }}
           href={data?.info.package_url}
+          isExternal
+          _hover={{ textDecoration: "none" }}
         >
           <Text color={"#006dad"}>{props.name}</Text>
+          {isLoading && <Spinner variant={""} />}
+          {isError && (
+            <Text color={"red.500"}>
+              Error: Seems like package doesn't exist
+            </Text>
+          )}
           <Text>{data?.info.summary}</Text>
         </Link>
       </Box>
