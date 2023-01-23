@@ -81,41 +81,53 @@ export default function Main() {
           <Heading>Python requirements.txt packages info</Heading>
         </Center>
         <Container marginTop={8}>
-          <Stack>
-            {!isSubmitted && (
-              <>
-                <Flex>
-                  <Text>Paste requirements.txt here:</Text>
-                  <Spacer />
-                  <Button size={"sm"} variant="outline" fontWeight={"light"}>
-                    Clear
-                  </Button>
-                </Flex>
-                <Textarea
-                  rows={20}
-                  value={requirementsContent}
-                  onChange={e => setRequirementsContent(e.target.value)}
-                ></Textarea>
-
+          {!isSubmitted && (
+            <Stack>
+              <Flex>
+                <Text>Paste requirements.txt here:</Text>
+                <Spacer />
                 <Button
-                  onClick={handleSubmit}
-                  width={"full"}
-                  colorScheme="facebook"
+                  size={"sm"}
+                  variant="outline"
+                  fontWeight={"light"}
+                  borderRadius="sm"
                 >
-                  Submit
+                  Clear
                 </Button>
-              </>
-            )}
-            {isSubmitted &&
-              getPackageNames().map(name => (
+              </Flex>
+              <Textarea
+                onChange={e => setRequirementsContent(e.target.value)}
+                value={requirementsContent}
+                rows={20}
+                borderRadius="sm"
+              ></Textarea>
+
+              <Button
+                onClick={handleSubmit}
+                width={"full"}
+                colorScheme="facebook"
+                borderRadius={"sm"}
+              >
+                Submit
+              </Button>
+            </Stack>
+          )}
+          {isSubmitted && (
+            <Stack>
+              {getPackageNames().map(name => (
                 <>
                   <PackageInfo name={name} key={name} />
-                  <Button onClick={handlePasteNew} colorScheme={"facebook"}>
-                    Paste new
-                  </Button>
                 </>
               ))}
-          </Stack>
+              <Button
+                onClick={handlePasteNew}
+                colorScheme={"facebook"}
+                borderRadius="sm"
+              >
+                Paste new
+              </Button>
+            </Stack>
+          )}
         </Container>
       </Box>
     </>
